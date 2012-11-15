@@ -1,0 +1,11 @@
+# Bash function to install puppet-git-hooks pre-commit hook automatically for
+# the repo you are in.  To install, add to your .bashrc or .bash_profile.
+
+function add-puppet-pre-commit-hook () {
+    set -e
+    cd $(git rev-parse --show-toplevel)/.git/hooks
+    rm -f pre-commit
+    wget https://raw.github.com/seattle-biomed/puppet-git-hooks/master/hooks/pre-commit
+    chmod 755 pre-commit
+    set +e
+}
