@@ -18,13 +18,13 @@ STATUS=0
 trap 'rm -rf $TMPFILE' EXIT INT HUP
 
 # Check for Puppet binary
-which puppet >/dev/null 2>&1 || exit 1
+bundle exec puppet >/dev/null 2>&1 || exit 1
 
 # Check for puppet-lint
-which puppet-lint >/dev/null 2>&1 || exit 1
+bundle exec puppet-lint /dev/null >/dev/null 2>&1 || exit 1
 
 # Check for erb
-which erb >/dev/null 2>&1 || exit 1
+bundle exec erb /dev/null >/dev/null 2>&1 || exit 1
 
 # Get correct git revision
 if git rev-parse --quiet --verify HEAD > /dev/null
@@ -59,14 +59,14 @@ do
         case $extension in
             pp)
                 # Puppet syntax check
-                puppet parser validate $TMPFILE >/dev/null 2>&1
+                bundle exec puppet parser validate $TMPFILE >/dev/null 2>&1
                 if [[ $? -ne 0 ]]; then
                     echo "Puppet syntax error in ${file}. Run 'puppet parser validate ${file}'" >&2
                     STATUS=2
                 fi
 
                 # puppet-lint check
-                puppet-lint $PUPPETLINT_FLAGS --log-format "${file}:%{linenumber} %{KIND} - %{message}" $TMPFILE 2> /dev/null
+                bundle exec puppet-lint $PUPPETLINT_FLAGS --log-format "${file}:%{linenumber} %{KIND} - %{message}" $TMPFILE 2> /dev/null
                 if [[ $? -ne 0 ]] ; then
                     STATUS=2
                 fi
@@ -75,7 +75,7 @@ do
             erb)
                 # syntax check templates - this doesn't catch a lot of mistakes,
                 # but it should catch gross mistakes
-                erb -x -T - "${TMPFILE}" | ruby -c > /dev/null 2>&1
+                bundle exec erb -x -T - "${TMPFILE}" | ruby -c > /dev/null 2>&1
                 if [[ $? -ne 0 ]]; then
                     echo "ERB syntax error in ${file}" >&2
                     STATUS=2
