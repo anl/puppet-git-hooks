@@ -21,7 +21,7 @@ trap 'rm -rf $TMPFILE' EXIT INT HUP
 bundle exec puppet >/dev/null 2>&1 || exit 1
 
 # Check for puppet-lint
-bundle exec puppet-lint /dev/null >/dev/null 2>&1 || exit 1
+bundle exec puppet-lint --help /dev/null >/dev/null 2>&1 || exit 1
 
 # Check for erb
 bundle exec erb /dev/null >/dev/null 2>&1 || exit 1
